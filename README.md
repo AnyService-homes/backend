@@ -64,7 +64,7 @@ This backend is built with **Django**, **Django REST Framework**, and **PostgreS
 ### 1. Clone the repository
 ```bash
 git clone https://github.com/AnyService-homes/backend.git
-cd <repo-name>
+cd backend
 ```
 
 ### 2. Create backend folder
