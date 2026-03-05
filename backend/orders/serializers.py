@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from .models import Order
+from services.serializers import ServiceSerializer
 
 class UserMiniSerializer(serializers.ModelSerializer):
     full_name = serializers.SerializerMethodField()
@@ -20,9 +21,13 @@ class UserMiniSerializer(serializers.ModelSerializer):
 
 
 class OrderSerializer(serializers.ModelSerializer):
-    customer = UserMiniSerializer(read_only=True)
-    service_man = UserMiniSerializer(read_only=True)
+    service = ServiceSerializer(read_only=True)
+    service_id = serializers.IntegerField(write_only=True)
+    booking_time = serializers.DateTimeField(required=True)
 
     class Meta:
         model = Order
-        fields = '__all__'
+        fields = [
+            'id', 'user', 'service', 'service_id',
+            'booking_time', 'status', 'created_at'
+        ]
