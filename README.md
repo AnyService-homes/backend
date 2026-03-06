@@ -115,3 +115,13 @@ python manage.py runserver
 - [ ] Admin dashboard
 
 - [ ] Frontend integration
+
+---
+
+## Commit Verification Notes
+***Some commits in this repository appear as Unverified on GitHub.***
+
+- All verified commits were made directly through GitHub Desktop or GitHub’s web interface, where my GPG key is configured.
+- All unverified commits were made inside VS Code, then pushed through the integrated terminal, which does not use my GPG signing key.
+
+***There is no difference in code quality or authenticity — only the signing method differs.***
