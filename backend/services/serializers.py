@@ -14,8 +14,9 @@ class CompanySerializer(serializers.ModelSerializer):
         fields = [
             'id', 'name', 'logo', 'description',
             'phone', 'email', 'address', 'website',
-            'rating', 'created_at'
+            'rating', 'created_at', 'is_verified'
         ]
+        read_only_fields = ['is_verified']
 
 
 class ServiceSerializer(serializers.ModelSerializer):

@@ -15,34 +15,52 @@ class CategoryListView(generics.ListAPIView):
 
 
 class CompanyListView(generics.ListAPIView):
-    queryset = Company.objects.all().order_by('name')
     serializer_class = CompanySerializer
+
+    def get_queryset(self):
+        # Only verified companies appear in the app
+        return Company.objects.filter(is_verified=True).order_by('name')
 
 
 class ServiceListView(generics.ListAPIView):
-    queryset = Service.objects.all().order_by('name')
     serializer_class = ServiceSerializer
+
+    def get_queryset(self):
+        # Only services from verified companies
+        return Service.objects.filter(company__is_verified=True).order_by('name')
 
 
 class ServicesByCategoryView(generics.ListAPIView):
     serializer_class = ServiceSerializer
 
     def get_queryset(self):
-        return Service.objects.filter(category_id=self.kwargs['category_id']).order_by('name')
+        # Only services from verified companies in this category
+        return Service.objects.filter(
+            category_id=self.kwargs['category_id'],
+            company__is_verified=True
+        ).order_by('name')
 
 
 class ServicesByCompanyView(generics.ListAPIView):
     serializer_class = ServiceSerializer
 
     def get_queryset(self):
-        return Service.objects.filter(company_id=self.kwargs['company_id']).order_by('name')
+        # Only show services if the company is verified
+        return Service.objects.filter(
+            company_id=self.kwargs['company_id'],
+            company__is_verified=True
+        ).order_by('name')
 
 
 class ServiceMenByCompanyView(generics.ListAPIView):
     serializer_class = ServiceManSerializer
 
     def get_queryset(self):
-        return ServiceMan.objects.filter(company_id=self.kwargs['company_id'])
+        # Only service men from verified companies
+        return ServiceMan.objects.filter(
+            company_id=self.kwargs['company_id'],
+            company__is_verified=True
+        )
 
 
 class SearchServicesView(generics.ListAPIView):
@@ -50,11 +68,18 @@ class SearchServicesView(generics.ListAPIView):
 
     def get_queryset(self):
         q = self.request.query_params.get('q', '')
-        return Service.objects.filter(name__icontains=q).order_by('name')
+        # Search only inside verified companies
+        return Service.objects.filter(
+            name__icontains=q,
+            company__is_verified=True
+        ).order_by('name')
 
 
 class FilterServicesView(generics.ListAPIView):
-    queryset = Service.objects.all().order_by('name')
     serializer_class = ServiceSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = ServiceFilter
+
+    def get_queryset(self):
+        # Filter only services from verified companies
+        return Service.objects.filter(company__is_verified=True).order_by('name')
